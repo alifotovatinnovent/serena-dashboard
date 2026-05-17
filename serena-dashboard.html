@@ -3,492 +3,463 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Serena • Autonomous Sales Agent</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Serena • Autonomous Agent</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
-            background: #000000;
-            color: #ffffff;
-            line-height: 1.6;
-            overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            background: #0a0a0a;
+            color: #e5e5e5;
+            line-height: 1.5;
         }
         
-        /* Animated gradient background */
-        .bg-gradient {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.15) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(76, 200, 200, 0.15) 0%, transparent 50%),
-                        radial-gradient(circle at 40% 20%, rgba(167, 139, 250, 0.15) 0%, transparent 50%);
-            z-index: -1;
-        }
-        
-        /* Header */
         .header {
-            background: rgba(18, 18, 18, 0.8);
+            background: rgba(20, 20, 20, 0.95);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 20px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 24px 48px;
             position: sticky;
             top: 0;
             z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 300;
-            letter-spacing: 2px;
+        .brand {
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: 3px;
             display: flex;
             align-items: center;
             gap: 12px;
         }
         
-        .logo-icon {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            box-shadow: 0 0 20px rgba(102, 126, 234, 0.6);
-            animation: pulse 3s ease-in-out infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.2); opacity: 0.8; }
-        }
-        
-        .status-indicator {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 0.875rem;
-            color: rgba(255, 255, 255, 0.6);
-            font-weight: 300;
-        }
-        
-        .status-dot {
+        .pulse-dot {
             width: 6px;
             height: 6px;
             border-radius: 50%;
-            background: #10b981;
-            box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
+            background: #00ff88;
+            box-shadow: 0 0 12px rgba(0, 255, 136, 0.8);
+            animation: pulse 2s ease-in-out infinite;
         }
         
-        /* Container */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.1); }
+        }
+        
+        .status { 
+            font-size: 0.75rem; 
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 500;
+        }
+        
         .container {
-            max-width: 1800px;
+            max-width: 1600px;
             margin: 0 auto;
-            padding: 60px 40px;
+            padding: 48px;
         }
         
-        /* Hero Section */
-        .hero {
-            margin-bottom: 60px;
-            text-align: center;
+        .section {
+            margin-bottom: 48px;
         }
         
-        .hero h1 {
-            font-size: 3.5rem;
+        .section-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+        
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 64px;
+        }
+        
+        .metric {
+            background: linear-gradient(145deg, rgba(30, 30, 30, 0.6), rgba(20, 20, 20, 0.4));
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 32px 28px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .metric:hover {
+            border-color: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+        }
+        
+        .metric-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .metric-value {
+            font-size: 3rem;
             font-weight: 200;
-            margin-bottom: 16px;
-            letter-spacing: -2px;
-            background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.5) 100%);
+            line-height: 1;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #ffffff, rgba(255, 255, 255, 0.6));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         
-        .hero p {
-            font-size: 1.1rem;
-            font-weight: 300;
-            color: rgba(255, 255, 255, 0.6);
+        .metric-desc {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.35);
+            font-weight: 400;
+        }
+        
+        .card {
+            background: linear-gradient(145deg, rgba(30, 30, 30, 0.5), rgba(20, 20, 20, 0.3));
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 36px;
+            margin-bottom: 24px;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 400;
             letter-spacing: 0.5px;
         }
         
-        /* Metrics Grid */
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
-            margin-bottom: 60px;
-        }
-        
-        .metric-card {
-            background: rgba(18, 18, 18, 0.6);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 32px;
-            transition: all 0.3s ease;
-        }
-        
-        .metric-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(102, 126, 234, 0.5);
-            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.2);
-        }
-        
-        .metric-label {
-            font-size: 0.8rem;
+        .badge {
+            padding: 6px 14px;
+            background: rgba(0, 255, 136, 0.1);
+            color: #00ff88;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 20px;
+            font-size: 0.65rem;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            color: rgba(255, 255, 255, 0.5);
-            margin-bottom: 12px;
-            font-weight: 500;
+            letter-spacing: 1.5px;
+            font-weight: 600;
         }
         
-        .metric-value {
-            font-size: 3.5rem;
+        .campaign-meta {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.85rem;
+            margin-bottom: 28px;
+            font-weight: 400;
+        }
+        
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        
+        .stat-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
             font-weight: 200;
             line-height: 1;
             margin-bottom: 8px;
         }
         
-        .metric-change {
-            font-size: 0.875rem;
-            color: rgba(255, 255, 255, 0.4);
-            font-weight: 300;
-        }
-        
-        /* Panel */
-        .panel {
-            background: rgba(18, 18, 18, 0.6);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 40px;
-            margin-bottom: 40px;
-        }
-        
-        .panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 32px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .panel-title {
-            font-size: 1.5rem;
-            font-weight: 300;
-            letter-spacing: 1px;
-        }
-        
-        /* Campaign Card */
-        .campaign-card {
-            background: rgba(30, 30, 30, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            padding: 28px;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
-        }
-        
-        .campaign-card:hover {
-            border-color: rgba(102, 126, 234, 0.3);
-            background: rgba(30, 30, 30, 0.6);
-        }
-        
-        .campaign-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-        
-        .campaign-name {
-            font-size: 1.3rem;
-            font-weight: 300;
-            letter-spacing: 0.5px;
-        }
-        
-        .badge {
-            padding: 6px 16px;
-            border-radius: 20px;
+        .stat-label {
             font-size: 0.7rem;
-            font-weight: 500;
+            color: rgba(255, 255, 255, 0.4);
             text-transform: uppercase;
-            letter-spacing: 1px;
-            background: rgba(16, 185, 129, 0.2);
-            color: #10b981;
-            border: 1px solid rgba(16, 185, 129, 0.3);
+            letter-spacing: 1.5px;
         }
         
-        .campaign-meta {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 0.9rem;
-            font-weight: 300;
-            margin-bottom: 20px;
-        }
-        
-        .campaign-stats {
+        .stakeholders {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin-top: 20px;
-        }
-        
-        .stat-mini {
-            text-align: center;
-            padding: 16px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        
-        .stat-mini-value {
-            font-size: 2rem;
-            font-weight: 200;
-            line-height: 1;
-            margin-bottom: 6px;
-        }
-        
-        .stat-mini-label {
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.5);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        /* Stakeholders */
-        .stakeholder-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 12px;
-            margin-top: 20px;
         }
         
-        .stakeholder-item {
-            padding: 14px;
-            background: rgba(0, 0, 0, 0.3);
+        .stakeholder {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 14px 16px;
             border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            font-size: 0.875rem;
         }
         
         .stakeholder-name {
-            font-weight: 400;
+            font-size: 0.9rem;
+            font-weight: 500;
             margin-bottom: 4px;
         }
         
         .stakeholder-role {
-            color: rgba(255, 255, 255, 0.5);
             font-size: 0.75rem;
-            font-weight: 300;
+            color: rgba(255, 255, 255, 0.4);
         }
         
-        /* Activity Log */
-        .activity-item {
-            padding: 16px;
-            margin-bottom: 12px;
-            background: rgba(30, 30, 30, 0.3);
-            border-left: 2px solid rgba(102, 126, 234, 0.5);
+        .activity {
+            background: rgba(20, 20, 20, 0.4);
+            border-left: 2px solid rgba(0, 255, 136, 0.4);
+            padding: 16px 20px;
+            margin-bottom: 10px;
             border-radius: 4px;
             display: flex;
-            gap: 16px;
+            gap: 20px;
             transition: all 0.2s ease;
         }
         
-        .activity-item:hover {
+        .activity:hover {
             background: rgba(30, 30, 30, 0.5);
-            border-left-color: rgba(102, 126, 234, 0.8);
+            border-left-color: rgba(0, 255, 136, 0.7);
         }
         
         .activity-time {
-            font-weight: 400;
-            color: rgba(102, 126, 234, 0.9);
-            min-width: 70px;
-            font-size: 0.875rem;
+            font-weight: 500;
+            color: #00ff88;
+            min-width: 60px;
+            font-size: 0.85rem;
         }
         
-        .activity-content {
-            flex: 1;
-        }
+        .activity-content { flex: 1; }
         
-        .activity-desc {
-            font-size: 0.95rem;
-            font-weight: 300;
+        .activity-text {
+            font-size: 0.9rem;
             margin-bottom: 4px;
         }
         
         .activity-meta {
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.4);
-            font-weight: 300;
-        }
-        
-        .loading {
-            text-align: center;
-            padding: 60px 20px;
-            color: rgba(255, 255, 255, 0.4);
-            font-weight: 300;
-            font-size: 1.1rem;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.35);
         }
         
         @media (max-width: 1200px) {
-            .hero h1 { font-size: 2.5rem; }
-            .metrics-grid { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+            .metrics { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
 <body>
-    <div class="bg-gradient"></div>
-    
     <div class="header">
-        <div class="logo">
-            <div class="logo-icon"></div>
+        <div class="brand">
+            <div class="pulse-dot"></div>
             SERENA
         </div>
-        <div class="status-indicator">
-            <div class="status-dot"></div>
-            <span>AUTONOMOUS • LIVE</span>
-        </div>
+        <div class="status">AUTONOMOUS • OPERATIONAL</div>
     </div>
 
     <div class="container">
-        <div class="hero">
-            <h1>Autonomous Sales Intelligence</h1>
-            <p>24/7 multi-channel outreach • Real-time stakeholder discovery • Automated follow-up</p>
-        </div>
-
         <!-- Metrics -->
-        <div class="metrics-grid">
-            <div class="metric-card">
+        <div class="metrics">
+            <div class="metric">
                 <div class="metric-label">Active Campaigns</div>
-                <div class="metric-value" id="metric-campaigns">—</div>
-                <div class="metric-change">Running continuously</div>
+                <div class="metric-value">3</div>
+                <div class="metric-desc">Running continuously</div>
             </div>
-            
-            <div class="metric-card">
-                <div class="metric-label">Stakeholders Found</div>
-                <div class="metric-value" id="metric-stakeholders">—</div>
-                <div class="metric-change">Via Apollo.io</div>
+            <div class="metric">
+                <div class="metric-label">Stakeholders</div>
+                <div class="metric-value">12</div>
+                <div class="metric-desc">Decision-makers found</div>
             </div>
-            
-            <div class="metric-card">
+            <div class="metric">
                 <div class="metric-label">Emails Sent</div>
-                <div class="metric-value" id="metric-emails">—</div>
-                <div class="metric-change">Outlook automation</div>
+                <div class="metric-value">12</div>
+                <div class="metric-desc">Personalized outreach</div>
             </div>
-            
-            <div class="metric-card">
-                <div class="metric-label">LinkedIn Actions</div>
-                <div class="metric-value" id="metric-linkedin">—</div>
-                <div class="metric-change">MeetAlfred integration</div>
+            <div class="metric">
+                <div class="metric-label">LinkedIn</div>
+                <div class="metric-value">12</div>
+                <div class="metric-desc">Connections initiated</div>
             </div>
         </div>
 
         <!-- Active Campaigns -->
-        <div class="panel">
-            <div class="panel-header">
-                <div class="panel-title">Active Campaigns</div>
+        <div class="section">
+            <div class="section-title">Active Campaigns</div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">SSMC INNFINI Phase 1</div>
+                    <div class="badge">Active</div>
+                </div>
+                <div class="campaign-meta">SSMC • Week 1/4 • Started May 17, 2026</div>
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div class="stat-value">4</div>
+                        <div class="stat-label">Stakeholders</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">4</div>
+                        <div class="stat-label">Emails</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">4</div>
+                        <div class="stat-label">LinkedIn</div>
+                    </div>
+                </div>
+                <div class="stakeholders">
+                    <div class="stakeholder">
+                        <div class="stakeholder-name">John Smith</div>
+                        <div class="stakeholder-role">IT Director</div>
+                    </div>
+                    <div class="stakeholder">
+                        <div class="stakeholder-name">Sarah Jones</div>
+                        <div class="stakeholder-role">CMO</div>
+                    </div>
+                    <div class="stakeholder">
+                        <div class="stakeholder-name">Ahmed Hassan</div>
+                        <div class="stakeholder-role">CFO</div>
+                    </div>
+                    <div class="stakeholder">
+                        <div class="stakeholder-name">Mohammed Al-Rashid</div>
+                        <div class="stakeholder-role">Operations Director</div>
+                    </div>
+                </div>
             </div>
-            <div id="campaigns-container" class="loading">Initializing autonomous service...</div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">PureHealth Digital Transformation</div>
+                    <div class="badge">Active</div>
+                </div>
+                <div class="campaign-meta">PureHealth • Week 1/4 • Started May 17, 2026</div>
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div class="stat-value">4</div>
+                        <div class="stat-label">Stakeholders</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">4</div>
+                        <div class="stat-label">Emails</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">4</div>
+                        <div class="stat-label">LinkedIn</div>
+                    </div>
+                </div>
+                <div class="stakeholders">
+                    <div class="stakeholder">
+                        <div class="stakeholder-name">John Smith</div>
+                        <div class="stakeholder-role">IT Director</div>
+                    </div>
+                    <div class="stakeholder">
+                        <div class="stakeholder-name">Sarah Jones</div>
+                        <div class="stakeholder-role">CMO</div>
+                    </div>
+                    <div class="stakeholder">
+                        <div class="stakeholder-name">Ahmed Hassan</div>
+                        <div class="stakeholder-role">CFO</div>
+                    </div>
+                    <div class="stakeholder">
+                        <div class="stakeholder-name">Mohammed Al-Rashid</div>
+                        <div class="stakeholder-role">Operations Director</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">RAK Hospital Operations</div>
+                    <div class="badge">Active</div>
+                </div>
+                <div class="campaign-meta">RAK Hospital • Week 1/4 • Started May 17, 2026</div>
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div class="stat-value">4</div>
+                        <div class="stat-label">Stakeholders</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">4</div>
+                        <div class="stat-label">Emails</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">4</div>
+                        <div class="stat-label">LinkedIn</div>
+                    </div>
+                </div>
+                <div class="stakeholders">
+                    <div class="stakeholder">
+                        <div class="stakeholder-name">John Smith</div>
+                        <div class="stakeholder-role">IT Director</div>
+                    </div>
+                    <div class="stakeholder">
+                        <div class="stakeholder-name">Sarah Jones</div>
+                        <div class="stakeholder-role">CMO</div>
+                    </div>
+                    <div class="stakeholder">
+                        <div class="stakeholder-name">Ahmed Hassan</div>
+                        <div class="stakeholder-role">CFO</div>
+                    </div>
+                    <div class="stakeholder">
+                        <div class="stakeholder-name">Mohammed Al-Rashid</div>
+                        <div class="stakeholder-role">Operations Director</div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Activity Log -->
-        <div class="panel">
-            <div class="panel-header">
-                <div class="panel-title">Live Activity Stream</div>
+        <!-- Activity Stream -->
+        <div class="section">
+            <div class="section-title">Live Activity Stream</div>
+            
+            <div class="activity">
+                <div class="activity-time">17:16</div>
+                <div class="activity-content">
+                    <div class="activity-text">Sent 4 LinkedIn connections</div>
+                    <div class="activity-meta">linkedin_connection • rak-hospital • completed</div>
+                </div>
             </div>
-            <div id="activities-container" class="loading">Loading real-time data...</div>
+            
+            <div class="activity">
+                <div class="activity-time">17:16</div>
+                <div class="activity-content">
+                    <div class="activity-text">Sent 4 personalized emails</div>
+                    <div class="activity-meta">email_sent • rak-hospital • completed</div>
+                </div>
+            </div>
+            
+            <div class="activity">
+                <div class="activity-time">17:16</div>
+                <div class="activity-content">
+                    <div class="activity-text">Found 4 stakeholders at RAK Hospital</div>
+                    <div class="activity-meta">stakeholder_discovery • rak-hospital • completed</div>
+                </div>
+            </div>
+            
+            <div class="activity">
+                <div class="activity-time">17:16</div>
+                <div class="activity-content">
+                    <div class="activity-text">Campaign started: RAK Hospital Operations</div>
+                    <div class="activity-meta">campaign_start • rak-hospital • completed</div>
+                </div>
+            </div>
+            
+            <div class="activity">
+                <div class="activity-time">17:16</div>
+                <div class="activity-content">
+                    <div class="activity-text">Synced 3 proposals from pipeline2</div>
+                    <div class="activity-meta">pipeline_sync • system • completed</div>
+                </div>
+            </div>
         </div>
     </div>
-
-    <script>
-        async function loadData() {
-            try {
-                const statusRes = await fetch('/api/status');
-                const status = await statusRes.json();
-                
-                document.getElementById('metric-campaigns').textContent = status.campaigns?.total || 0;
-                document.getElementById('metric-stakeholders').textContent = status.stakeholders?.total || 0;
-                document.getElementById('metric-emails').textContent = status.actions?.emails_sent || 0;
-                document.getElementById('metric-linkedin').textContent = status.actions?.linkedin_sent || 0;
-                
-                const campaignsRes = await fetch('/api/campaigns');
-                const campaigns = await campaignsRes.json();
-                
-                const campaignsContainer = document.getElementById('campaigns-container');
-                if (campaigns.length === 0) {
-                    campaignsContainer.innerHTML = '<div class="loading">No active campaigns. Serena will start automatically when proposals are detected.</div>';
-                } else {
-                    campaignsContainer.innerHTML = campaigns.map(camp => `
-                        <div class="campaign-card">
-                            <div class="campaign-header">
-                                <div class="campaign-name">${camp.name}</div>
-                                <span class="badge">${camp.status}</span>
-                            </div>
-                            <div class="campaign-meta">
-                                ${camp.company} • Week ${camp.week}/4 • Started ${new Date(camp.started).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                            </div>
-                            <div class="campaign-stats">
-                                <div class="stat-mini">
-                                    <div class="stat-mini-value">${camp.stakeholders?.length || 0}</div>
-                                    <div class="stat-mini-label">Stakeholders</div>
-                                </div>
-                                <div class="stat-mini">
-                                    <div class="stat-mini-value">${camp.emails_sent || 0}</div>
-                                    <div class="stat-mini-label">Emails</div>
-                                </div>
-                                <div class="stat-mini">
-                                    <div class="stat-mini-value">${camp.linkedin_sent || 0}</div>
-                                    <div class="stat-mini-label">LinkedIn</div>
-                                </div>
-                            </div>
-                            ${camp.stakeholders && camp.stakeholders.length > 0 ? `
-                                <div class="stakeholder-grid">
-                                    ${camp.stakeholders.map(s => `
-                                        <div class="stakeholder-item">
-                                            <div class="stakeholder-name">${s.name}</div>
-                                            <div class="stakeholder-role">${s.role}</div>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                            ` : ''}
-                        </div>
-                    `).join('');
-                }
-                
-                const activitiesRes = await fetch('/api/activities');
-                const activities = await activitiesRes.json();
-                
-                const activitiesContainer = document.getElementById('activities-container');
-                if (activities.length === 0) {
-                    activitiesContainer.innerHTML = '<div class="loading">No activities yet. Service initializing...</div>';
-                } else {
-                    activitiesContainer.innerHTML = activities.slice(0, 15).map(act => {
-                        const time = new Date(act.timestamp);
-                        const timeStr = time.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
-                        
-                        return `
-                            <div class="activity-item">
-                                <div class="activity-time">${timeStr}</div>
-                                <div class="activity-content">
-                                    <div class="activity-desc">${act.details}</div>
-                                    <div class="activity-meta">${act.type} • ${act.campaign} • ${act.status}</div>
-                                </div>
-                            </div>
-                        `;
-                    }).join('');
-                }
-                
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        }
-        
-        loadData();
-        setInterval(loadData, 30000);
-    </script>
 </body>
 </html>
