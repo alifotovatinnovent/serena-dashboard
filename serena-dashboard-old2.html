@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serena - AI Sales Acceleration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #2d3748;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #718096;
+            font-size: 1.1rem;
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            background: white;
+            padding: 15px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .tab-button {
+            padding: 12px 24px;
+            border: none;
+            background: transparent;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .tab-button.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .tab-button:hover:not(.active) {
+            background: #f7fafc;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Process Flow */
+        .process-flow {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 30px 0;
+            overflow-x: auto;
+            padding: 20px 0;
+        }
+
+        .flow-step {
+            flex: 1;
+            min-width: 180px;
+            text-align: center;
+            position: relative;
+        }
+
+        .flow-step:not(:last-child)::after {
+            content: '→';
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            color: #667eea;
+        }
+
+        .flow-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-size: 2rem;
+        }
+
+        .flow-label {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .flow-desc {
+            font-size: 0.85rem;
+            color: #718096;
+        }
+
+        /* Two Column Layout */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 30px;
+        }
+
+        /* Add Proposal Form */
+        .add-proposal {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2d3748;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Campaigns List */
+        .campaigns-section {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #2d3748;
+        }
+
+        .campaign-card {
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        .campaign-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .campaign-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .campaign-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .campaign-company {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .status-active { background: #c6f6d5; color: #22543d; }
+        .status-hot { background: #fed7d7; color: #742a2a; animation: pulse 2s infinite; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Steps Progress */
+        .steps-progress {
+            margin: 20px 0;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: #f7fafc;
+            border-radius: 8px;
+            border-left: 4px solid #e2e8f0;
+        }
+
+        .step-item.completed {
+            border-left-color: #48bb78;
+        }
+
+        .step-item.in-progress {
+            border-left-color: #ed8936;
+        }
+
+        .step-icon {
+            margin-right: 12px;
+            font-size: 1.2rem;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-title {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .step-details {
+            font-size: 0.85rem;
+            color: #718096;
+        }
+
+        /* Results Grid */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .result-card {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .result-label {
+            font-size: 0.8rem;
+            color: #718096;
+            margin-bottom: 5px;
+        }
+
+        .result-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .result-source {
+            font-size: 0.75rem;
+            color: #a0aec0;
+            margin-top: 3px;
+        }
+
+        /* AI Recommendations */
+        .ai-recommendations {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .ai-recommendations h3 {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+        }
+
+        .ai-recommendations h3::before {
+            content: '🤖';
+            margin-right: 10px;
+        }
+
+        .recommendation-item {
+            background: rgba(255,255,255,0.1);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .recommendation-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .recommendation-priority {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .priority-high { background: #fc8181; }
+        .priority-medium { background: #f6ad55; }
+        .priority-low { background: #68d391; }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #a0aec0;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 1024px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 Serena</h1>
+            <p class="subtitle">AI Sales Acceleration Agent • Multi-Channel Campaign Orchestration</p>
+        </header>
+
+        <!-- Tab Navigation -->
+        <div class="tab-nav">
+            <button class="tab-button active" onclick="showTab('overview')">📊 Overview</button>
+            <button class="tab-button" onclick="showTab('campaigns')">📋 Manage Campaigns</button>
+            <button class="tab-button" onclick="showTab('howto')">❓ How It Works</button>
+        </div>
+
+        <!-- Overview Tab -->
+        <div id="overview" class="tab-content active">
+            <div class="process-flow">
+                <h2>🔄 The Process</h2>
+                <div class="flow-diagram">
+                    <div class="flow-step">
+                        <div class="flow-icon">📝</div>
+                        <div class="flow-label">1. You Submit</div>
+                        <div class="flow-desc">Add proposal details</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-icon">🔍</div>
+                        <div class="flow-label">2. Research</div>
+                        <div class="flow-desc">Apollo enrichment</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-icon">🎯</div>
+                        <div class="flow-label">3. Plan</div>
+                        <div class="flow-desc">Multi-channel strategy</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-icon">📧</div>
+                        <div class="flow-label">4. Execute</div>
+                        <div class="flow-desc">Email + LinkedIn</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-icon">📊</div>
+                        <div class="flow-label">5. Monitor</div>
+                        <div class="flow-desc">Track & adapt</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-icon">🤝</div>
+                        <div class="flow-label">6. Close</div>
+                        <div class="flow-desc">Hot lead handoff</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Example Active Campaign -->
+            <div class="campaigns-section">
+                <h2>📋 Active Campaigns (Demo)</h2>
+                
+                <div class="campaign-card">
+                    <div class="campaign-header">
+                        <div>
+                            <div class="campaign-title">SSMC INNFINI Phase 1</div>
+                            <div class="campaign-company">Sheikh Shakhbout Medical City • AED 2.5M</div>
+                        </div>
+                        <span class="status-badge status-hot">🔥 HOT</span>
+                    </div>
+
+                    <!-- Steps -->
+                    <div class="steps-progress">
+                        <div class="step-item completed">
+                            <div class="step-icon">✅</div>
+                            <div class="step-content">
+                                <div class="step-title">Research Complete</div>
+                                <div class="step-details">Found 5 stakeholders via Apollo • Mapped org structure</div>
+                            </div>
+                        </div>
+
+                        <div class="step-item completed">
+                            <div class="step-icon">✅</div>
+                            <div class="step-content">
+                                <div class="step-title">Campaign Planned</div>
+                                <div class="step-details">5-touch sequence created (Email + LinkedIn)</div>
+                            </div>
+                        </div>
+
+                        <div class="step-item in-progress">
+                            <div class="step-icon">⏳</div>
+                            <div class="step-content">
+                                <div class="step-title">Outreach In Progress</div>
+                                <div class="step-details">3 emails sent via Outlook • 2 LinkedIn connections via MeetAlfred</div>
+                            </div>
+                        </div>
+
+                        <div class="step-item">
+                            <div class="step-icon">📊</div>
+                            <div class="step-content">
+                                <div class="step-title">Monitoring Engagement</div>
+                                <div class="step-details">Scheduled: May 18-21 • Adaptive strategy enabled</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Results -->
+                    <div class="results-grid">
+                        <div class="result-card">
+                            <div class="result-label">Stakeholders</div>
+                            <div class="result-value">5</div>
+                            <div class="result-source">Apollo.io</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Emails Sent</div>
+                            <div class="result-value">3</div>
+                            <div class="result-source">Outlook</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">LinkedIn</div>
+                            <div class="result-value">2</div>
+                            <div class="result-source">MeetAlfred</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Opens</div>
+                            <div class="result-value">3</div>
+                            <div class="result-source">Email Tracking</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Clicks</div>
+                            <div class="result-value">1</div>
+                            <div class="result-source">Email Tracking</div>
+                        </div>
+                        <div class="result-card">
+                            <div class="result-label">Engagement</div>
+                            <div class="result-value">68%</div>
+                            <div class="result-source">Serena AI</div>
+                        </div>
+                    </div>
+
+                    <!-- AI Recommendations -->
+                    <div class="ai-recommendations">
+                        <h3>AI-Powered Next Actions</h3>
+                        <div class="recommendation-item">
+                            <span class="recommendation-priority priority-high">HIGH</span>
+                            <strong>CMO showing strong interest:</strong> Dr. Sarah Jones opened email 3 times. Send technical deep-dive document within 24 hours. Include implementation timeline.
+                        </div>
+                        <div class="recommendation-item">
+                            <span class="recommendation-priority priority-medium">MEDIUM</span>
+                            <strong>CFO needs ROI focus:</strong> Ahmed Hassan hasn't engaged. Pivot messaging to cost savings and payback period. Send financial case study.
+                        </div>
+                        <div class="recommendation-item">
+                            <span class="recommendation-priority priority-low">LOW</span>
+                            <strong>Expand stakeholder reach:</strong> Sales Navigator found 3 additional decision-makers in Ops dept. Add to campaign for broader coverage.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manage Campaigns Tab -->
+        <div id="campaigns" class="tab-content">
+            <div class="main-layout">
+                <!-- Add New Proposal -->
+                <div class="add-proposal">
+                    <h2>➕ New Proposal</h2>
+                    <form id="proposal-form">
+                        <div class="form-group">
+                            <label for="proposal-name">Proposal Name *</label>
+                            <input type="text" id="proposal-name" required placeholder="e.g., SSMC INNFINI Phase 1">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="company">Company *</label>
+                            <input type="text" id="company" required placeholder="e.g., Sheikh Shakhbout Medical City">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contacts">Primary Contacts *</label>
+                            <input type="text" id="contacts" required placeholder="email@company.com, email2@company.com">
+                            <small style="color: #718096; font-size: 0.85rem;">Comma-separated emails</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="amount">Value (AED)</label>
+                            <input type="number" id="amount" placeholder="2500000">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="value-props">Key Value Propositions *</label>
+                            <textarea id="value-props" required placeholder="• 72% reduction in search time&#10;• AED 38M ROI over 5 years&#10;• 15-25% capacity unlocked"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="proposal-url">Proposal URL (Optional)</label>
+                            <input type="url" id="proposal-url" placeholder="https://...">
+                        </div>
+
+                        <button type="submit">🚀 Launch Campaign</button>
+                    </form>
+                </div>
+
+                <!-- Campaigns List -->
+                <div class="campaigns-section">
+                    <h2>📋 Your Campaigns</h2>
+                    <div id="campaigns-list">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🚀</div>
+                            <h3>Ready to Launch</h3>
+                            <p>Add your first proposal to start a campaign</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- How It Works Tab -->
+        <div id="howto" class="tab-content">
+            <div class="process-flow">
+                <h2>❓ How Serena Works</h2>
+                
+                <div style="padding: 20px 0;">
+                    <h3 style="margin-bottom: 15px;">When You Submit a Proposal, Here's What Happens:</h3>
+                    
+                    <div style="margin-bottom: 30px;">
+                        <h4 style="margin-bottom: 10px;">📝 Step 1: You Submit</h4>
+                        <p style="color: #718096; line-height: 1.6;">Fill out the proposal form with client name, contacts, deal value, and key value propositions. Click "Launch Campaign" and Serena takes over.</p>
+                    </div>
+
+                    <div style="margin-bottom: 30px;">
+                        <h4 style="margin-bottom: 10px;">🔍 Step 2: Research (Apollo.io)</h4>
+                        <p style="color: #718096; line-height: 1.6;"><strong>What Serena Does:</strong> Enriches your contact data, finds additional stakeholders, maps the org chart, identifies decision-makers by role (CFO, CTO, Ops).</p>
+                        <p style="color: #718096; line-height: 1.6;"><strong>You See:</strong> "Found 5 stakeholders via Apollo • Mapped org structure"</p>
+                    </div>
+
+                    <div style="margin-bottom: 30px;">
+                        <h4 style="margin-bottom: 10px;">🎯 Step 3: Plan</h4>
+                        <p style="color: #718096; line-height: 1.6;"><strong>What Serena Does:</strong> Creates a multi-touch campaign strategy. Email sequence (Day 1 ROI, Day 3 Features, Day 7 Case Study, Day 14 Demo). LinkedIn connection + message sequence. Personalizes content by stakeholder role.</p>
+                        <p style="color: #718096; line-height: 1.6;"><strong>You See:</strong> "5-touch sequence created (Email + LinkedIn)"</p>
+                    </div>
+
+                    <div style="margin-bottom: 30px;">
+                        <h4 style="margin-bottom: 10px;">📧 Step 4: Execute (Outlook + MeetAlfred)</h4>
+                        <p style="color: #718096; line-height: 1.6;"><strong>What Serena Does:</strong> Sends personalized emails via your Outlook (amanda.f@innovent.io). LinkedIn connection requests via MeetAlfred. Customizes messaging per stakeholder (CFO gets ROI, CTO gets tech specs).</p>
+                        <p style="color: #718096; line-height: 1.6;"><strong>You See:</strong> "3 emails sent via Outlook • 2 LinkedIn connections via MeetAlfred"</p>
+                    </div>
+
+                    <div style="margin-bottom: 30px;">
+                        <h4 style="margin-bottom: 10px;">📊 Step 5: Monitor & Adapt</h4>
+                        <p style="color: #718096; line-height: 1.6;"><strong>What Serena Does:</strong> Tracks email opens, clicks, replies. Monitors LinkedIn connection accepts, message responses. Calculates engagement scores. Detects buying signals ("What's the pricing?" = hot lead). Adapts strategy in real-time (hot leads get accelerated, cold leads get pivoted).</p>
+                        <p style="color: #718096; line-height: 1.6;"><strong>You See:</strong> Real-time metrics + AI recommendations</p>
+                    </div>
+
+                    <div style="margin-bottom: 30px;">
+                        <h4 style="margin-bottom: 10px;">🤝 Step 6: Close</h4>
+                        <p style="color: #718096; line-height: 1.6;"><strong>What Serena Does:</strong> Alerts you when buying signals detected. Hands off hot leads for your personal follow-up. Continues nurturing warm/cold leads.</p>
+                        <p style="color: #718096; line-height: 1.6;"><strong>You See:</strong> 🔥 HOT badge + high-priority AI recommendation</p>
+                    </div>
+
+                    <h3 style="margin: 30px 0 15px 0;">🤖 AI Recommendations</h3>
+                    <p style="color: #718096; line-height: 1.6; margin-bottom: 15px;">Serena analyzes all engagement data and suggests specific next actions:</p>
+                    <ul style="color: #718096; line-height: 1.8; margin-left: 20px;">
+                        <li><strong>High Priority:</strong> Immediate actions for hot leads (send technical doc, schedule demo)</li>
+                        <li><strong>Medium Priority:</strong> Strategy pivots for cold leads (change messaging angle)</li>
+                        <li><strong>Low Priority:</strong> Expansion opportunities (add more stakeholders, try new channels)</li>
+                    </ul>
+
+                    <h3 style="margin: 30px 0 15px 0;">📊 Results You Track</h3>
+                    <p style="color: #718096; line-height: 1.6;">Every campaign shows real-time metrics from all tools:</p>
+                    <ul style="color: #718096; line-height: 1.8; margin-left: 20px;">
+                        <li><strong>Apollo.io:</strong> Contacts found, stakeholders mapped</li>
+                        <li><strong>Outlook:</strong> Emails sent, opens, clicks</li>
+                        <li><strong>MeetAlfred:</strong> LinkedIn connections, messages, responses</li>
+                        <li><strong>Sales Navigator:</strong> Additional prospects discovered</li>
+                        <li><strong>Serena AI:</strong> Overall engagement score, recommendations</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Deactivate all buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            
+            // Activate button
+            event.target.classList.add('active');
+        }
+
+        // Form submission
+        document.getElementById('proposal-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            alert('🚀 Campaign launching! In production, this would:\n\n1. Send data to Serena backend\n2. Start Apollo research\n3. Plan multi-channel strategy\n4. Begin outreach execution\n\nConnect APIs to enable full automation!');
+            
+            // In production: POST to /api/proposals
+        });
+    </script>
+</body>
+</html>
