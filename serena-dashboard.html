@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Serena - Sales Acceleration Platform</title>
+    <title>Serena - Autonomous Sales Agent</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -12,10 +12,8 @@
             font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #f4f4f4;
             color: #161616;
-            line-height: 1.6;
         }
         
-        /* IBM-style header */
         .header {
             background: #161616;
             color: white;
@@ -23,20 +21,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
         
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 600;
-            letter-spacing: -0.5px;
-        }
-        
-        .header-actions {
-            display: flex;
-            gap: 16px;
-            align-items: center;
-        }
+        .logo { font-size: 1.5rem; font-weight: 600; }
         
         .status-indicator {
             display: flex;
@@ -58,17 +45,33 @@
             50% { opacity: 0.5; }
         }
         
-        /* Main container */
         .container {
             max-width: 1920px;
             margin: 0 auto;
             padding: 32px;
         }
         
-        /* Metrics grid - IBM style */
+        .banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 32px;
+            border-radius: 8px;
+            margin-bottom: 32px;
+        }
+        
+        .banner h2 {
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+        }
+        
+        .banner p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+        
         .metrics-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 16px;
             margin-bottom: 32px;
         }
@@ -77,12 +80,10 @@
             background: white;
             padding: 24px;
             border-left: 4px solid #0f62fe;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
         
         .metric-card.success { border-left-color: #24a148; }
-        .metric-card.warning { border-left-color: #f1c21b; }
-        .metric-card.info { border-left-color: #0f62fe; }
+        .metric-card.info { border-left-color: #8a3ffc; }
         
         .metric-label {
             font-size: 0.875rem;
@@ -96,27 +97,18 @@
             font-size: 2.5rem;
             font-weight: 300;
             color: #161616;
-            line-height: 1;
         }
         
         .metric-change {
             font-size: 0.875rem;
-            color: #24a148;
+            color: #525252;
             margin-top: 8px;
-        }
-        
-        /* Content grid */
-        .content-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 24px;
-            margin-bottom: 32px;
         }
         
         .panel {
             background: white;
             padding: 32px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            margin-bottom: 24px;
         }
         
         .panel-header {
@@ -131,398 +123,275 @@
         .panel-title {
             font-size: 1.25rem;
             font-weight: 600;
-            color: #161616;
         }
         
-        .panel-action {
-            font-size: 0.875rem;
-            color: #0f62fe;
-            cursor: pointer;
-            text-decoration: none;
-        }
-        
-        .panel-action:hover { text-decoration: underline; }
-        
-        /* Activity list */
-        .activity-list {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-        
-        .activity-item {
-            display: flex;
-            gap: 16px;
-            padding: 16px;
+        .campaign-card {
             background: #f4f4f4;
-            border-radius: 2px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border-radius: 4px;
         }
         
-        .activity-icon {
-            width: 40px;
-            height: 40px;
+        .campaign-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            background: white;
-            border-radius: 2px;
-            font-size: 1.2rem;
-            flex-shrink: 0;
+            margin-bottom: 12px;
         }
         
-        .activity-content { flex: 1; }
-        
-        .activity-title {
-            font-weight: 500;
-            margin-bottom: 4px;
+        .campaign-name {
+            font-weight: 600;
+            font-size: 1.1rem;
         }
         
-        .activity-meta {
-            font-size: 0.875rem;
-            color: #525252;
-        }
-        
-        .activity-status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.875rem;
-            margin-top: 8px;
-        }
-        
-        .status-badge {
+        .badge {
             padding: 4px 12px;
             border-radius: 2px;
             font-size: 0.75rem;
-            font-weight: 500;
+            font-weight: 600;
             text-transform: uppercase;
         }
         
-        .status-completed { background: #defbe6; color: #0e6027; }
-        .status-pending { background: #fff1d9; color: #8a3800; }
-        .status-in-progress { background: #d0e2ff; color: #002d9c; }
+        .badge-active { background: #d0e2ff; color: #002d9c; }
         
-        /* Pending items */
-        .pending-item {
-            padding: 16px;
-            background: #fff1d9;
-            border-left: 4px solid #f1c21b;
-            margin-bottom: 12px;
+        .campaign-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 12px;
         }
         
-        .pending-title {
+        .stat-mini {
+            text-align: center;
+            padding: 12px;
+            background: white;
+            border-radius: 4px;
+        }
+        
+        .stat-mini-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .stat-mini-label {
+            font-size: 0.75rem;
+            color: #525252;
+            margin-top: 4px;
+        }
+        
+        .activity-item {
+            padding: 12px;
+            margin-bottom: 8px;
+            background: #f4f4f4;
+            display: flex;
+            gap: 12px;
+            border-radius: 4px;
+        }
+        
+        .activity-time {
+            font-weight: 500;
+            color: #0f62fe;
+            min-width: 80px;
+            font-size: 0.875rem;
+        }
+        
+        .activity-desc {
+            flex: 1;
+            font-size: 0.9rem;
+        }
+        
+        .activity-type {
+            font-size: 0.75rem;
+            color: #8d8d8d;
+            margin-top: 2px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #8d8d8d;
+        }
+        
+        .stakeholder-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+        
+        .stakeholder-item {
+            padding: 12px;
+            background: white;
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+        
+        .stakeholder-name {
             font-weight: 500;
             margin-bottom: 4px;
         }
         
-        .pending-desc {
-            font-size: 0.875rem;
+        .stakeholder-role {
             color: #525252;
-        }
-        
-        /* Charts */
-        .chart-container {
-            position: relative;
-            height: 300px;
-            margin-top: 24px;
-        }
-        
-        /* Schedule */
-        .schedule-day {
-            margin-bottom: 24px;
-        }
-        
-        .day-header {
-            font-weight: 600;
-            font-size: 1.1rem;
-            margin-bottom: 12px;
-            color: #161616;
-        }
-        
-        .schedule-item {
-            display: flex;
-            gap: 16px;
-            padding: 12px;
-            background: #f4f4f4;
-            margin-bottom: 8px;
-            align-items: center;
-        }
-        
-        .schedule-time {
-            font-weight: 500;
-            color: #0f62fe;
-            min-width: 60px;
-        }
-        
-        .schedule-desc { flex: 1; }
-        
-        @media (max-width: 1200px) {
-            .content-grid { grid-template-columns: 1fr; }
+            font-size: 0.75rem;
         }
     </style>
 </head>
 <body>
-    <!-- IBM-style header -->
     <div class="header">
-        <div class="logo">⚡ Serena</div>
-        <div class="header-actions">
-            <div class="status-indicator">
-                <div class="status-dot"></div>
-                <span>System Active</span>
-            </div>
-            <span style="color: #8d8d8d; font-size: 0.875rem;">Last sync: 2 min ago</span>
+        <div class="logo">⚡ Serena Autonomous</div>
+        <div class="status-indicator">
+            <div class="status-dot"></div>
+            <span>Running 24/7</span>
         </div>
     </div>
 
     <div class="container">
-        <!-- Metrics Overview -->
+        <div class="banner">
+            <h2>🚀 Autonomous Sales Agent - LIVE</h2>
+            <p>Syncs pipeline2 daily • Finds stakeholders • Sends emails + LinkedIn • Updates you automatically</p>
+        </div>
+
+        <!-- Metrics -->
         <div class="metrics-grid">
             <div class="metric-card success">
-                <div class="metric-label">Completed Actions</div>
-                <div class="metric-value">147</div>
-                <div class="metric-change">↑ 23 this week</div>
-            </div>
-            
-            <div class="metric-card warning">
-                <div class="metric-label">Pending Actions</div>
-                <div class="metric-value">12</div>
-                <div class="metric-change">3 require your input</div>
-            </div>
-            
-            <div class="metric-card info">
                 <div class="metric-label">Active Campaigns</div>
-                <div class="metric-value">5</div>
-                <div class="metric-change">2 in Week 1 execution</div>
+                <div class="metric-value" id="metric-campaigns">-</div>
+                <div class="metric-change">Running automatically</div>
             </div>
             
             <div class="metric-card info">
-                <div class="metric-label">Utilization Rate</div>
-                <div class="metric-value">78%</div>
-                <div class="metric-change">6.2h active / 8h day</div>
+                <div class="metric-label">Stakeholders Found</div>
+                <div class="metric-value" id="metric-stakeholders">-</div>
+                <div class="metric-change">Via Apollo.io</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-label">Emails Sent</div>
+                <div class="metric-value" id="metric-emails">-</div>
+                <div class="metric-change">Via Outlook</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-label">LinkedIn Actions</div>
+                <div class="metric-value" id="metric-linkedin">-</div>
+                <div class="metric-change">Via MeetAlfred</div>
             </div>
         </div>
 
-        <!-- Main content grid -->
-        <div class="content-grid">
-            <!-- Left: Activity Log -->
-            <div class="panel">
-                <div class="panel-header">
-                    <div class="panel-title">Recent Activity</div>
-                    <a href="#" class="panel-action">View all →</a>
-                </div>
-                
-                <div class="activity-list">
-                    <div class="activity-item">
-                        <div class="activity-icon">📧</div>
-                        <div class="activity-content">
-                            <div class="activity-title">Email Campaign - SSMC Week 1</div>
-                            <div class="activity-meta">Sent 5 personalized emails via Outlook • SSMC INNFINI Phase 1</div>
-                            <div class="activity-status">
-                                <span class="status-badge status-completed">Completed</span>
-                                <span>15:08 GMT+4</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="activity-item">
-                        <div class="activity-icon">🔍</div>
-                        <div class="activity-content">
-                            <div class="activity-title">Stakeholder Research - Apollo.io</div>
-                            <div class="activity-meta">Found 5 decision-makers at SSMC • IT Director, CMO, CFO, Ops Director, Nursing Director</div>
-                            <div class="activity-status">
-                                <span class="status-badge status-completed">Completed</span>
-                                <span>15:05 GMT+4</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="activity-item">
-                        <div class="activity-icon">💼</div>
-                        <div class="activity-content">
-                            <div class="activity-title">LinkedIn Automation - MeetAlfred</div>
-                            <div class="activity-meta">Sent 5 connection requests • Personalized messages per role</div>
-                            <div class="activity-status">
-                                <span class="status-badge status-in-progress">In Progress</span>
-                                <span>15:01 GMT+4</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="activity-item">
-                        <div class="activity-icon">📊</div>
-                        <div class="activity-content">
-                            <div class="activity-title">Pipeline Sync - pipeline2.onrender.com</div>
-                            <div class="activity-meta">Synced 23 proposals • Created 5 new campaigns</div>
-                            <div class="activity-status">
-                                <span class="status-badge status-completed">Completed</span>
-                                <span>14:45 GMT+4</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="activity-item">
-                        <div class="activity-icon">📈</div>
-                        <div class="activity-content">
-                            <div class="activity-title">Engagement Tracking - Week 2</div>
-                            <div class="activity-meta">RAK Hospital: 3 opens, 1 click, 52% engagement</div>
-                            <div class="activity-status">
-                                <span class="status-badge status-completed">Completed</span>
-                                <span>14:30 GMT+4</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Utilization Chart -->
-                <div class="panel-header" style="margin-top: 32px;">
-                    <div class="panel-title">Tool Utilization</div>
-                </div>
-                <div class="chart-container">
-                    <canvas id="utilizationChart"></canvas>
-                </div>
+        <!-- Active Campaigns -->
+        <div class="panel">
+            <div class="panel-header">
+                <div class="panel-title">📊 Active Campaigns</div>
             </div>
-            
-            <!-- Right: Pending & Schedule -->
-            <div style="display: flex; flex-direction: column; gap: 24px;">
-                <!-- Pending Items -->
-                <div class="panel">
-                    <div class="panel-header">
-                        <div class="panel-title">Pending on You</div>
-                        <span style="background: #f1c21b; color: #161616; padding: 4px 12px; border-radius: 2px; font-size: 0.75rem; font-weight: 600;">3 ITEMS</span>
-                    </div>
-                    
-                    <div class="pending-item">
-                        <div class="pending-title">Apollo.io API Key</div>
-                        <div class="pending-desc">Required for stakeholder discovery • Blocks Week 1 automation</div>
-                    </div>
-                    
-                    <div class="pending-item">
-                        <div class="pending-title">MeetAlfred API Key</div>
-                        <div class="pending-desc">Required for LinkedIn automation • Blocks connection requests</div>
-                    </div>
-                    
-                    <div class="pending-item">
-                        <div class="pending-title">SSMC Demo Approval</div>
-                        <div class="pending-desc">CMO requested demo • Hot lead waiting for your scheduling</div>
-                    </div>
-                </div>
-                
-                <!-- Schedule -->
-                <div class="panel">
-                    <div class="panel-header">
-                        <div class="panel-title">Activity Schedule</div>
-                        <a href="#" class="panel-action">Week view →</a>
-                    </div>
-                    
-                    <div class="schedule-day">
-                        <div class="day-header">Today • May 17</div>
-                        <div class="schedule-item">
-                            <div class="schedule-time">09:00</div>
-                            <div class="schedule-desc">Outlook token refresh</div>
-                            <span class="status-badge status-completed">Done</span>
-                        </div>
-                        <div class="schedule-item">
-                            <div class="schedule-time">10:30</div>
-                            <div class="schedule-desc">SSMC Week 1 execution</div>
-                            <span class="status-badge status-completed">Done</span>
-                        </div>
-                        <div class="schedule-item">
-                            <div class="schedule-time">16:00</div>
-                            <div class="schedule-desc">Daily summary report</div>
-                            <span class="status-badge status-pending">Scheduled</span>
-                        </div>
-                    </div>
-                    
-                    <div class="schedule-day">
-                        <div class="day-header">Tomorrow • May 18</div>
-                        <div class="schedule-item">
-                            <div class="schedule-time">09:00</div>
-                            <div class="schedule-desc">SSMC Week 2 start (auto)</div>
-                            <span class="status-badge status-pending">Scheduled</span>
-                        </div>
-                        <div class="schedule-item">
-                            <div class="schedule-time">11:00</div>
-                            <div class="schedule-desc">PureHealth follow-ups</div>
-                            <span class="status-badge status-pending">Scheduled</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Activity Distribution Chart -->
-                <div class="panel">
-                    <div class="panel-header">
-                        <div class="panel-title">Activity Distribution</div>
-                    </div>
-                    <div class="chart-container" style="height: 250px;">
-                        <canvas id="activityChart"></canvas>
-                    </div>
-                </div>
+            <div id="campaigns-container" class="loading">Loading campaigns...</div>
+        </div>
+
+        <!-- Recent Activities -->
+        <div class="panel">
+            <div class="panel-header">
+                <div class="panel-title">📋 Real-Time Activity Log</div>
             </div>
+            <div id="activities-container" class="loading">Loading activities...</div>
         </div>
     </div>
 
     <script>
-        // Tool Utilization Chart
-        const utilizationCtx = document.getElementById('utilizationChart').getContext('2d');
-        new Chart(utilizationCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Outlook', 'Apollo', 'MeetAlfred', 'Sales Nav', 'Pipeline2', 'Other'],
-                datasets: [{
-                    label: 'Activities',
-                    data: [52, 37, 29, 15, 8, 6],
-                    backgroundColor: [
-                        '#0f62fe',
-                        '#24a148',
-                        '#8a3ffc',
-                        '#f1c21b',
-                        '#ff832b',
-                        '#da1e28'
-                    ]
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: { precision: 0 }
-                    }
+        // Fetch real data from autonomous service
+        async function loadData() {
+            try {
+                // Fetch status
+                const statusRes = await fetch('/api/status');
+                const status = await statusRes.json();
+                
+                // Update metrics
+                document.getElementById('metric-campaigns').textContent = status.campaigns?.total || 0;
+                document.getElementById('metric-stakeholders').textContent = status.stakeholders?.total || 0;
+                document.getElementById('metric-emails').textContent = status.actions?.emails_sent || 0;
+                document.getElementById('metric-linkedin').textContent = status.actions?.linkedin_sent || 0;
+                
+                // Fetch campaigns
+                const campaignsRes = await fetch('/api/campaigns');
+                const campaigns = await campaignsRes.json();
+                
+                // Render campaigns
+                const campaignsContainer = document.getElementById('campaigns-container');
+                if (campaigns.length === 0) {
+                    campaignsContainer.innerHTML = '<div class="loading">No active campaigns yet. Serena will start when new proposals are detected.</div>';
+                } else {
+                    campaignsContainer.innerHTML = campaigns.map(camp => `
+                        <div class="campaign-card">
+                            <div class="campaign-header">
+                                <div class="campaign-name">${camp.name}</div>
+                                <span class="badge badge-active">${camp.status}</span>
+                            </div>
+                            <div style="color: #525252; font-size: 0.9rem; margin-bottom: 8px;">
+                                🏢 ${camp.company} • Started: ${new Date(camp.started).toLocaleDateString()} • Week ${camp.week}/4
+                            </div>
+                            <div class="campaign-stats">
+                                <div class="stat-mini">
+                                    <div class="stat-mini-value">${camp.stakeholders?.length || 0}</div>
+                                    <div class="stat-mini-label">Stakeholders</div>
+                                </div>
+                                <div class="stat-mini">
+                                    <div class="stat-mini-value">${camp.emails_sent || 0}</div>
+                                    <div class="stat-mini-label">Emails Sent</div>
+                                </div>
+                                <div class="stat-mini">
+                                    <div class="stat-mini-value">${camp.linkedin_sent || 0}</div>
+                                    <div class="stat-mini-label">LinkedIn</div>
+                                </div>
+                            </div>
+                            ${camp.stakeholders && camp.stakeholders.length > 0 ? `
+                                <div class="stakeholder-list">
+                                    ${camp.stakeholders.map(s => `
+                                        <div class="stakeholder-item">
+                                            <div class="stakeholder-name">${s.name}</div>
+                                            <div class="stakeholder-role">${s.role}</div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `).join('');
                 }
+                
+                // Fetch activities
+                const activitiesRes = await fetch('/api/activities');
+                const activities = await activitiesRes.json();
+                
+                // Render activities
+                const activitiesContainer = document.getElementById('activities-container');
+                if (activities.length === 0) {
+                    activitiesContainer.innerHTML = '<div class="loading">No activities logged yet.</div>';
+                } else {
+                    activitiesContainer.innerHTML = activities.slice(0, 20).map(act => {
+                        const time = new Date(act.timestamp);
+                        const timeStr = time.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                        
+                        return `
+                            <div class="activity-item">
+                                <div class="activity-time">${timeStr}</div>
+                                <div>
+                                    <div class="activity-desc">${act.details}</div>
+                                    <div class="activity-type">${act.type} • ${act.campaign} • ${act.status}</div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+                
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('campaigns-container').innerHTML = '<div class="loading">⚠️ Error loading data. Make sure autonomous service is running.</div>';
             }
-        });
+        }
         
-        // Activity Distribution Pie Chart
-        const activityCtx = document.getElementById('activityChart').getContext('2d');
-        new Chart(activityCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Emails', 'Research', 'LinkedIn', 'Tracking', 'Other'],
-                datasets: [{
-                    data: [40, 25, 20, 10, 5],
-                    backgroundColor: [
-                        '#0f62fe',
-                        '#24a148',
-                        '#8a3ffc',
-                        '#f1c21b',
-                        '#ff832b'
-                    ]
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
-                }
-            }
-        });
+        // Load data on page load
+        loadData();
+        
+        // Refresh every 30 seconds
+        setInterval(loadData, 30000);
     </script>
 </body>
 </html>
