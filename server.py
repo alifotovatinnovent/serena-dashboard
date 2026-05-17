@@ -4,7 +4,7 @@ Serena API Server
 Connects dashboard to Serena agent
 """
 
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
 import os
 from serena_agent import SerenaAgent
@@ -17,7 +17,7 @@ serena = SerenaAgent()
 @app.route('/')
 def index():
     """Serve dashboard"""
-    return send_from_directory('..', 'serena-dashboard.html')
+    return send_file('serena-dashboard.html')
 
 @app.route('/api/proposals', methods=['GET'])
 def get_proposals():
