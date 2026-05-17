@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serena - AI Sales Acceleration Agent</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #2d3748;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #718096;
+            font-size: 1.1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .stat-label {
+            color: #718096;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .stat-trend {
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        .trend-up { color: #48bb78; }
+        .trend-down { color: #f56565; }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 30px;
+        }
+
+        .campaigns-section, .add-proposal {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #2d3748;
+        }
+
+        .campaign-card {
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        .campaign-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .campaign-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .campaign-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .campaign-company {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .status-active { background: #c6f6d5; color: #22543d; }
+        .status-pending { background: #feebc8; color: #7c2d12; }
+        .status-won { background: #bee3f8; color: #2c5282; }
+        .status-lost { background: #fed7d7; color: #742a2a; }
+
+        .campaign-meta {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: #718096;
+        }
+
+        .engagement-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .engagement-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s;
+        }
+
+        .stakeholders {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .stakeholder-chip {
+            background: #edf2f7;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            color: #4a5568;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2d3748;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #a0aec0;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .next-action {
+            background: #f7fafc;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .next-action strong {
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 Serena</h1>
+            <p class="subtitle">AI-Driven Sales Acceleration Agent</p>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Active Campaigns</div>
+                <div class="stat-value" id="active-campaigns">0</div>
+                <div class="stat-trend trend-up">↑ Ready to launch</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Proposals</div>
+                <div class="stat-value" id="total-proposals">0</div>
+                <div class="stat-trend">Add your first proposal →</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Engagement Rate</div>
+                <div class="stat-value" id="engagement-rate">-</div>
+                <div class="stat-trend">Across all campaigns</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Win Rate</div>
+                <div class="stat-value" id="win-rate">-</div>
+                <div class="stat-trend">Conversion to close</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="campaigns-section">
+                <h2>📊 Active Campaigns</h2>
+                <div id="campaigns-list">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🚀</div>
+                        <h3>Ready to Accelerate Sales</h3>
+                        <p>Add your first proposal to get started with Serena</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="add-proposal">
+                <h2>➕ New Proposal</h2>
+                <form id="proposal-form">
+                    <div class="form-group">
+                        <label for="proposal-name">Proposal Name *</label>
+                        <input type="text" id="proposal-name" required placeholder="e.g., SSMC INNFINI Phase 1">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="company">Company *</label>
+                        <input type="text" id="company" required placeholder="e.g., Sheikh Shakhbout Medical City">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contacts">Primary Contacts *</label>
+                        <input type="text" id="contacts" required placeholder="name@company.com, name2@company.com">
+                        <small style="color: #718096; font-size: 0.85rem;">Comma-separated emails</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="amount">Proposal Value (AED)</label>
+                        <input type="number" id="amount" placeholder="500000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="value-props">Key Value Propositions *</label>
+                        <textarea id="value-props" required placeholder="• 72% reduction in equipment search time&#10;• 15-25% hidden capacity unlocked&#10;• 80% fewer overdue calibrations"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="proposal-url">Proposal URL (Optional)</label>
+                        <input type="url" id="proposal-url" placeholder="https://...">
+                    </div>
+
+                    <button type="submit">🚀 Launch Campaign</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Local storage for MVP (will migrate to Airtable)
+        let proposals = JSON.parse(localStorage.getItem('serena-proposals') || '[]');
+
+        function updateStats() {
+            document.getElementById('active-campaigns').textContent = proposals.filter(p => p.status === 'active').length;
+            document.getElementById('total-proposals').textContent = proposals.length;
+            
+            if (proposals.length > 0) {
+                const totalEngagement = proposals.reduce((sum, p) => sum + (p.engagement || 0), 0);
+                const avgEngagement = Math.round(totalEngagement / proposals.length);
+                document.getElementById('engagement-rate').textContent = avgEngagement + '%';
+
+                const won = proposals.filter(p => p.status === 'won').length;
+                const winRate = proposals.length > 0 ? Math.round((won / proposals.length) * 100) : 0;
+                document.getElementById('win-rate').textContent = winRate + '%';
+            }
+        }
+
+        function renderCampaigns() {
+            const container = document.getElementById('campaigns-list');
+            
+            if (proposals.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🚀</div>
+                        <h3>Ready to Accelerate Sales</h3>
+                        <p>Add your first proposal to get started with Serena</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = proposals.map(p => `
+                <div class="campaign-card">
+                    <div class="campaign-header">
+                        <div>
+                            <div class="campaign-title">${p.name}</div>
+                            <div class="campaign-company">${p.company}</div>
+                        </div>
+                        <span class="status-badge status-${p.status}">${p.status.toUpperCase()}</span>
+                    </div>
+                    
+                    <div class="campaign-meta">
+                        <span>💰 ${p.amount ? 'AED ' + parseInt(p.amount).toLocaleString() : 'Not specified'}</span>
+                        <span>📧 ${p.contacts.split(',').length} contacts</span>
+                        <span>📅 ${new Date(p.createdAt).toLocaleDateString()}</span>
+                    </div>
+
+                    <div class="engagement-bar">
+                        <div class="engagement-fill" style="width: ${p.engagement || 0}%"></div>
+                    </div>
+                    <small style="color: #718096;">Engagement: ${p.engagement || 0}%</small>
+
+                    <div class="stakeholders">
+                        ${p.contacts.split(',').map(c => `<span class="stakeholder-chip">${c.trim().split('@')[0]}</span>`).join('')}
+                    </div>
+
+                    <div class="next-action">
+                        <strong>Next:</strong> ${p.nextAction || 'Serena is researching stakeholders...'}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('proposal-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const proposal = {
+                id: Date.now().toString(),
+                name: document.getElementById('proposal-name').value,
+                company: document.getElementById('company').value,
+                contacts: document.getElementById('contacts').value,
+                amount: document.getElementById('amount').value,
+                valueProps: document.getElementById('value-props').value,
+                proposalUrl: document.getElementById('proposal-url').value,
+                status: 'active',
+                engagement: Math.floor(Math.random() * 30), // Simulated for MVP
+                createdAt: new Date().toISOString(),
+                nextAction: 'Researching stakeholders and building outreach strategy...'
+            };
+
+            proposals.push(proposal);
+            localStorage.setItem('serena-proposals', JSON.stringify(proposals));
+            
+            // Reset form
+            e.target.reset();
+            
+            // Update UI
+            updateStats();
+            renderCampaigns();
+
+            alert(`✅ Campaign "${proposal.name}" launched! Serena is now working on this proposal.`);
+        });
+
+        // Initial render
+        updateStats();
+        renderCampaigns();
+    </script>
+</body>
+</html>
